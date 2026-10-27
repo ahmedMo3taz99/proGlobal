@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { motion } from 'motion/react';
 import { PRODUCTS } from '../data/products';
-import FVGChart from '../components/FVGChart';
+import BotVisual from '../components/BotVisual';
 
 interface Props { onOpenModal: () => void; }
 
@@ -28,7 +28,7 @@ export default function ProductDetailPage({ onOpenModal }: Props) {
 
   if (!product) return null;
 
-  const others = PRODUCTS.filter(p => p.slug !== slug).slice(0, 3);
+  const others = PRODUCTS.filter(p => p.slug !== slug);
   const whatsapp = import.meta.env.VITE_WHATSAPP as string;
 
   return (
@@ -57,9 +57,12 @@ export default function ProductDetailPage({ onOpenModal }: Props) {
               </span>
             </div>
 
-            <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-[#F0F0FF] tracking-[-0.03em] rtl:tracking-normal leading-tight mb-4">
+            <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-[#F0F0FF] tracking-[-0.03em] rtl:tracking-normal leading-tight mb-2">
               {isAr ? product.nameAr : product.nameEn}
             </h1>
+            <p className="font-body text-sm sm:text-base font-medium mb-4" style={{ color: product.accentColor }}>
+              {isAr ? product.taglineAr : product.taglineEn}
+            </p>
 
             <p className="font-body text-[#F0F0FF]/55 text-sm sm:text-base leading-relaxed mb-8">
               {isAr ? product.descAr : product.descEn}
@@ -68,10 +71,10 @@ export default function ProductDetailPage({ onOpenModal }: Props) {
             {/* Quick stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
               {[
-                { label: 'Min Capital', value: product.minCapital },
-                { label: 'Daily Profit', value: product.dailyProfit },
-                { label: 'Monthly Avg', value: product.monthlyProfit },
-                { label: 'Timeframe', value: product.timeframe },
+                { label: t('products.stat_market'), value: product.pair.split('·')[0].trim() },
+                { label: t('products.stat_strategy'), value: isAr ? product.strategyAr : product.strategyEn },
+                { label: t('products.stat_platform'), value: product.platform },
+                { label: t('products.stat_timeframe'), value: product.timeframe },
               ].map(s => (
                 <div key={s.label} className="bg-[#0D0D0D] border border-[#1A1A2E] rounded-xl px-3 py-3 text-center">
                   <p className="font-body text-[9px] text-[#F0F0FF]/30 uppercase tracking-wider mb-1">{s.label}</p>
@@ -103,19 +106,19 @@ export default function ProductDetailPage({ onOpenModal }: Props) {
               <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g,'')}`}
                 target="_blank" rel="noopener noreferrer"
                 className="border border-[#1A1A2E] text-[#F0F0FF]/60 font-body text-sm px-7 py-3.5 rounded-full w-full sm:w-auto text-center hover:border-[#9333EA]/50 hover:text-[#F0F0FF] transition-all duration-300">
-                Free Demo
+                {t('products.free_demo')}
               </a>
             </div>
           </div>
 
           {/* Right — FVG Chart */}
           <div className="relative" dir="ltr">
-            <div className="bg-[#0D0D0D] border border-[#1A1A2E] rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            <div className="bg-[#0D0D0D] border rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden" style={{ borderColor: product.accentColor + '30' }}>
               <div className="absolute inset-0 opacity-20 pointer-events-none"
                 style={{background:`radial-gradient(circle at 60% 40%, ${product.accentColor}30 0%, transparent 65%)`}}/>
-              <FVGChart type={product.fvgType} accentColor={product.accentColor} height={220} animated={true}/>
+              <BotVisual key={product.slug} product={product} height={300} />
               <p className="font-mono text-[9px] text-[#F0F0FF]/25 text-center mt-4">
-                Fair Value Gap — {product.pair}
+                {product.nameEn} — {product.pair}
               </p>
             </div>
           </div>
@@ -125,7 +128,7 @@ export default function ProductDetailPage({ onOpenModal }: Props) {
       {/* Pricing */}
       <section className="bg-[#0D0D0D] border-y border-[#1A1A2E] py-16 px-4 sm:px-6 md:px-12">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-[#F0F0FF] text-center mb-10">Choose Your Plan</h2>
+          <h2 className="font-display font-extrabold text-2xl sm:text-3xl text-[#F0F0FF] text-center mb-10">{t('products.choose_plan')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {product.plans.map((plan, i) => {
               const isHL = plan.badge === 'popular';
@@ -175,17 +178,17 @@ export default function ProductDetailPage({ onOpenModal }: Props) {
 
       {/* Other bots */}
       <section className="py-14 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto">
-        <h3 className="font-display font-bold text-xl text-[#F0F0FF] mb-8">You may also like</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <h3 className="font-display font-bold text-xl text-[#F0F0FF] mb-8">{t('products.also_like')}</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {others.map(p => {
             const lowest = Math.min(...p.plans.map(pl => pl.price));
             return (
               <div key={p.id} onClick={() => navigate(`/products/${p.slug}`)}
                 className="bg-[#0D0D0D] border border-[#1A1A2E] rounded-2xl overflow-hidden cursor-pointer hover:border-[#9333EA]/30 transition-all duration-300 group">
-                <div className="h-28 bg-[#030303] p-3 relative overflow-hidden" dir="ltr">
+                <div className="h-36 bg-[#030303] p-3 relative overflow-hidden" dir="ltr">
                   <div className="absolute inset-0 opacity-20 pointer-events-none"
                     style={{background:`radial-gradient(circle at 60% 50%, ${p.accentColor}25 0%, transparent 70%)`}}/>
-                  <FVGChart type={p.fvgType} accentColor={p.accentColor} height={90} animated={false}/>
+                  <BotVisual product={p} height={120} />
                 </div>
                 <div className="p-4">
                   <h4 className="font-display font-bold text-sm text-[#F0F0FF] mb-1">{isAr ? p.nameAr : p.nameEn}</h4>

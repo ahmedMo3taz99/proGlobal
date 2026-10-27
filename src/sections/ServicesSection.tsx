@@ -11,9 +11,9 @@ const highlights = ['robot_h1', 'robot_h2', 'robot_h3', 'robot_h4'];
 // Sample trade log shown in the visual panel; numbers are illustrative only
 const trades = [
   { pair: 'XAU/USD', side: 'BUY',  pnl: '+1.24%' },
-  { pair: 'BTC/USD', side: 'SELL', pnl: '+0.86%' },
+  { pair: 'EUR/USD', side: 'SELL', pnl: '+0.86%' },
   { pair: 'XAU/USD', side: 'BUY',  pnl: '+0.52%' },
-  { pair: 'ETH/USD', side: 'BUY',  pnl: '+1.07%' },
+  { pair: 'GBP/USD', side: 'BUY',  pnl: '+1.07%' },
 ];
 
 interface Props { onOpenModal: () => void; }
@@ -121,7 +121,7 @@ export default function ServicesSection({ onOpenModal }: Props) {
           <div className="grid grid-cols-3 gap-2.5 mt-5">
             {[
               { v: '24/7', k: 'panel_uptime' },
-              { v: '7', k: 'panel_bots' },
+              { v: '3', k: 'panel_bots' },
               { v: 'MT4/5', k: 'panel_platforms' },
             ].map(({ v, k }) => (
               <div key={k} className="rounded-xl bg-[#9333EA]/[0.07] border border-[#9333EA]/15 py-3 text-center">
