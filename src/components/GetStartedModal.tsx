@@ -21,7 +21,7 @@ export default function GetStartedModal({ isOpen, onClose }: Props) {
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const interests = ['int_robot','int_indicator','int_toby','int_smc','int_liquidity'];
+  const interests = ['int_robot'];
 
   useEffect(() => {
     if (!isOpen) return;

@@ -10,7 +10,7 @@ export default function JoinSection({ onOpenModal }: Props) {
   const { t } = useTranslation();
   const email = import.meta.env.VITE_EMAIL as string;
   const reg = import.meta.env.VITE_COMPANY_REG as string;
-  const trustItems = ['UK Registered', reg, 'Partner: Tickmill (FCA)', email];
+  const trustItems = ['UK Registered', reg, email];
   const joinRef = useRef<HTMLElement>(null);
 
   useEffect(() => {

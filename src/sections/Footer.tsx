@@ -3,8 +3,8 @@ import Logo from '../components/Logo';
 import SocialLinks from '../components/SocialLinks';
 import { scrollTo } from '../utils/scrollTo';
 
-const serviceKeys = ['robot', 'indicator', 'toby', 'liquidity', 'smc'];
-const platforms = ['MT4', 'MT5', 'TradingView', 'Tickmill', 'FCA Regulated'];
+const serviceKeys = ['robot'];
+const platforms = ['MT4', 'MT5', 'TradingView'];
 
 const headingClass = 'font-body text-[9px] sm:text-[10px] text-[#F0F0FF]/30 uppercase tracking-[0.2em] rtl:tracking-normal mb-5';
 const itemClass = 'font-body text-xs sm:text-sm text-[#F0F0FF]/50';

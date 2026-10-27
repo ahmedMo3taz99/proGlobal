@@ -4,75 +4,38 @@ import { gsap } from 'gsap';
 import { useNavigate } from 'react-router-dom';
 import SectionHeader from '../components/SectionHeader';
 
-const services = [
-  {
-    key: 'robot', color: '#9333EA', bg: 'bg-[#9333EA]/10',
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
-        <circle cx="12" cy="12" r="7"/>
-      </>
-    ),
-  },
-  {
-    key: 'indicator', color: '#00E5FF', bg: 'bg-[#00E5FF]/10',
-    icon: <path d="M4 20V14M10 20V9M16 20V12M22 20V4M2 20h21"/>,
-  },
-  {
-    key: 'toby', color: '#8B5CF6', bg: 'bg-[#8B5CF6]/10',
-    icon: (
-      <>
-        <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        <path d="M8 9h8M8 13h5"/>
-      </>
-    ),
-  },
-  {
-    key: 'liquidity', color: '#06B6D4', bg: 'bg-[#06B6D4]/10',
-    icon: (
-      <path d="M2 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>
-    ),
-  },
-  {
-    key: 'smc', color: '#F59E0B', bg: 'bg-[#F59E0B]/10',
-    icon: (
-      <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>
-    ),
-  },
-  {
-    key: 'capital', color: '#10B981', bg: 'bg-[#10B981]/10',
-    icon: (
-      <>
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        <path d="M9 12l2 2 4-4"/>
-      </>
-    ),
-  },
+const COLOR = '#9333EA';
+
+const highlights = ['robot_h1', 'robot_h2', 'robot_h3', 'robot_h4'];
+
+// Sample trade log shown in the visual panel; numbers are illustrative only
+const trades = [
+  { pair: 'XAU/USD', side: 'BUY',  pnl: '+1.24%' },
+  { pair: 'BTC/USD', side: 'SELL', pnl: '+0.86%' },
+  { pair: 'XAU/USD', side: 'BUY',  pnl: '+0.52%' },
+  { pair: 'ETH/USD', side: 'BUY',  pnl: '+1.07%' },
 ];
 
 interface Props { onOpenModal: () => void; }
 
-export default function ServicesSection({ onOpenModal: _onOpenModal }: Props) {
+export default function ServicesSection({ onOpenModal }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const servicesRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.service-card', {
-        y: 80, opacity: 0, duration: 0.8, ease: 'power3.out',
-        stagger: 0.12,
-        scrollTrigger: { trigger: '.services-grid', start: 'top 75%', once: true },
+      gsap.from('.service-feature', {
+        y: 80, opacity: 0, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: '.service-feature', start: 'top 80%', once: true },
+      });
+      gsap.from('.trade-row', {
+        x: 30, opacity: 0, duration: 0.5, ease: 'power2.out', stagger: 0.12, delay: 0.4,
+        scrollTrigger: { trigger: '.service-feature', start: 'top 80%', once: true },
       });
     }, servicesRef);
     return () => ctx.revert();
   }, []);
-
-  const handleLearnMore = (key: string) => {
-    if (key === 'robot') navigate('/products');
-    else navigate(`/services/${key}`);
-  };
 
   return (
     <section id="services" ref={servicesRef} className="bg-[#030303] py-14 px-4 sm:py-20 sm:px-6 md:py-28 md:px-12">
@@ -84,35 +47,90 @@ export default function ServicesSection({ onOpenModal: _onOpenModal }: Props) {
         hideSubOnMobile
       />
 
-      <div className="services-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {services.map(({ key, color, bg, icon }) => (
-          <div key={key} className="service-card">
-            <div className="h-full bg-[#0D0D0D] border border-[#1A1A2E] rounded-2xl p-5 sm:p-7 flex flex-col
-              transition-all duration-300 hover:-translate-y-1 hover:border-[#9333EA]/20"
-              style={{ '--card-color': color } as React.CSSProperties}>
-              <div className={`w-11 h-11 rounded-xl ${bg} flex items-center justify-center mb-6`}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color}
-                  strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  {icon}
-                </svg>
-              </div>
-              <h3 className="font-display font-bold text-lg text-[#F0F0FF] mb-2">
-                {t(`services.${key}_name`)}
-              </h3>
-              <p className="font-body text-[#F0F0FF]/50 text-sm leading-relaxed flex-1">
-                {t(`services.${key}_desc`)}
-              </p>
-              <button
-                onClick={() => handleLearnMore(key)}
-                className="font-body text-[9px] sm:text-xs mt-6 self-start cursor-pointer transition-colors duration-300 flex items-center gap-1"
-                style={{ color: 'rgba(240,240,255,0.4)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = color)}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(240,240,255,0.4)')}>
-                {t('services.learn_more')}
-              </button>
-            </div>
+      <div className="service-feature relative max-w-6xl mx-auto overflow-hidden rounded-3xl border border-[#9333EA]/20
+        bg-gradient-to-br from-[#0D0D0D] via-[#0D0D0D] to-[#9333EA]/[0.06]
+        grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 p-6 sm:p-10 md:p-12
+        transition-[border-color] duration-500 hover:border-[#9333EA]/40">
+        <div aria-hidden="true" className="pointer-events-none absolute -top-32 -end-32 w-80 h-80 rounded-full bg-[#9333EA]/10 blur-3xl" />
+
+        <div className="relative flex flex-col">
+          <div className="w-12 h-12 rounded-xl bg-[#9333EA]/10 flex items-center justify-center mb-6">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={COLOR}
+              strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
+              <circle cx="12" cy="12" r="7"/>
+            </svg>
           </div>
-        ))}
+          <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-[#F0F0FF] mb-3">
+            {t('services.robot_name')}
+          </h3>
+          <p className="font-body text-[#F0F0FF]/55 text-sm sm:text-base leading-relaxed">
+            {t('services.robot_desc')}
+          </p>
+
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
+            {highlights.map(k => (
+              <li key={k} className="flex items-center gap-2.5 rounded-xl border border-[#1A1A2E] bg-[#030303]/60 px-3.5 py-3 font-body text-xs sm:text-sm text-[#F0F0FF]/70">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={COLOR} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+                {t(`services.${k}`)}
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-col sm:flex-row gap-3 mt-8 md:mt-auto md:pt-8">
+            <button onClick={() => navigate('/products')}
+              className="font-body font-semibold text-sm rounded-full px-6 py-3 bg-[#9333EA] text-white cursor-pointer
+                transition-all duration-300 hover:bg-[#A855F7] hover:shadow-[0_0_30px_rgba(147,51,234,0.4)]">
+              {t('services.view_all_bots')}
+            </button>
+            <button onClick={onOpenModal}
+              className="font-body text-sm rounded-full px-6 py-3 border border-[#F0F0FF]/15 text-[#F0F0FF]/80 cursor-pointer
+                transition-colors duration-300 hover:border-[#9333EA]/50 hover:text-[#F0F0FF]">
+              {t('nav.cta')}
+            </button>
+          </div>
+        </div>
+
+        <div className="relative rounded-2xl border border-[#1A1A2E] bg-[#030303]/80 p-5 sm:p-6 flex flex-col" aria-hidden="true">
+          <div className="flex items-center justify-between mb-5">
+            <span className="font-body text-[10px] sm:text-xs text-[#F0F0FF]/40 uppercase tracking-[0.2em] rtl:tracking-normal">
+              {t('services.panel_title')}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-body text-[10px] font-medium uppercase border"
+              style={{ color: COLOR, borderColor: `${COLOR}40`, backgroundColor: `${COLOR}1A` }}>
+              <span className="blink-dot w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLOR }} />
+              {t('tools.robot_tag')}
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-2.5" dir="ltr">
+            {trades.map((tr, i) => (
+              <div key={i} className="trade-row flex items-center justify-between rounded-xl bg-[#0D0D0D] border border-[#1A1A2E] px-4 py-3 font-body text-xs sm:text-sm">
+                <span className="text-[#F0F0FF]/80 font-medium">{tr.pair}</span>
+                <span className={`text-[10px] font-bold rounded-md px-2 py-0.5 ${tr.side === 'BUY' ? 'text-[#10B981] bg-[#10B981]/10' : 'text-[#FF4D6D] bg-[#FF4D6D]/10'}`}>
+                  {tr.side}
+                </span>
+                <span className="text-[#10B981] font-semibold">{tr.pnl}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-3 gap-2.5 mt-5">
+            {[
+              { v: '24/7', k: 'panel_uptime' },
+              { v: '7', k: 'panel_bots' },
+              { v: 'MT4/5', k: 'panel_platforms' },
+            ].map(({ v, k }) => (
+              <div key={k} className="rounded-xl bg-[#9333EA]/[0.07] border border-[#9333EA]/15 py-3 text-center">
+                <div className="font-display font-extrabold text-base sm:text-lg text-[#F0F0FF]" dir="ltr">{v}</div>
+                <div className="font-body text-[9px] sm:text-[10px] text-[#F0F0FF]/40 mt-0.5">{t(`services.${k}`)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

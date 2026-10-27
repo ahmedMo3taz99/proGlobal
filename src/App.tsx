@@ -17,7 +17,6 @@ import JoinSection from './sections/JoinSection';
 import Footer from './sections/Footer';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import ServicePage from './pages/ServicePage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,7 +89,6 @@ function Shell() {
           <Route path="/" element={<HomePage onOpenModal={openModal} />} />
           <Route path="/products" element={<ProductsPage onOpenModal={openModal} />} />
           <Route path="/products/:slug" element={<ProductDetailPage onOpenModal={openModal} />} />
-          <Route path="/services/:serviceKey" element={<ServicePage onOpenModal={openModal} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

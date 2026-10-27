@@ -16,7 +16,7 @@ export default function StatsSection() {
       const counters = [
         { el: '.stat-0', end: 6,  suffix: '+' },
         { el: '.stat-1', end: 24, suffix: '/7' },
-        { el: '.stat-2', end: 3,  suffix: '' },
+        { el: '.stat-2', end: 7,  suffix: '' },
       ];
       counters.forEach(({ el, end, suffix }) => {
         const node = statsRef.current?.querySelector(el);
@@ -52,7 +52,7 @@ export default function StatsSection() {
           <span className={labelClass}>{t('stats.tools')}</span>
         </div>
         <div className={cellClass}>
-          <span className={`stat-3 ${numberClass}`}>FCA</span>
+          <span className={`stat-3 ${numberClass}`}>UK</span>
           <span className={labelClass}>{t('stats.partner')}</span>
         </div>
       </div>

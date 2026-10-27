@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-const row1 = ['MT4', '·', 'MetaTrader 4', '·', 'MT5', '·', 'MetaTrader 5', '·', 'TradingView', '·', 'Tickmill', '·'];
-const row2 = ['FCA Regulated', '·', 'CySEC', '·', 'FSA', '·', 'Smart Money Concepts', '·', 'Gold Signals', '·', '24/7 Support', '·'];
+const row1 = ['MT4', '·', 'MetaTrader 4', '·', 'MT5', '·', 'MetaTrader 5', '·', 'TradingView', '·'];
+const row2 = ['AI Trading Robot', '·', 'XAU/USD', '·', 'BTC/USD', '·', 'Gold & Crypto', '·', 'Risk Management', '·', '24/7 Support', '·'];
 
 function Row({ items, trackClass, itemClass, dotClass }: { items: string[]; trackClass: string; itemClass: string; dotClass: string }) {
   return (
